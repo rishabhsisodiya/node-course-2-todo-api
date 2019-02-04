@@ -67,6 +67,27 @@ userSchema.statics.findByToken = function (token) {
   });
 };
 
+userSchema.statics.findByCrendentials = function (email, password) {
+  var user = this;
+
+  return user.findOne({email}).then((user) => {
+    if (!user) {
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // console.log(user);
+          resolve(user);
+        } else {
+          reject("User not found!!");
+        }
+      });
+    });
+  });
+};
+
 userSchema.pre('save', function (next) {
   var user= this;
   if (user.isModified('password')) {
@@ -75,7 +96,7 @@ userSchema.pre('save', function (next) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(password, salt, (err,hash) => {
         user.password=hash;
-        console.log(hash);
+        // console.log(hash);
         next();
       });
     });
