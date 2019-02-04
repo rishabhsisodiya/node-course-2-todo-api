@@ -120,6 +120,15 @@ app.post('/users/login',(req,res) => {
 }
 );
 
+app.delete('/users/me/token', authenticate , (req,res) => {
+  console.log('working');
+req.user.removeToken(req.token).then(() => {
+  res.status(200).send('Token has been Deleted!');
+}, () => {
+  res.status(400).send();
+});
+});
+
 app.listen(port, () => {
   console.log(`Started on port ${port}`);
 })
