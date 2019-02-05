@@ -9,7 +9,6 @@ var authenticate = (req,res,next) => {
     req.token=token;
     next();
   }).catch((err) => {
-    console.log('errrorrr');
     res.status(401).send();
   });
 }
